@@ -1,7 +1,7 @@
 import { ConnectionOptions } from "typeorm";
 
 
-const config: ConnectionOptions ={
+const config: ConnectionOptions = {
     type: 'postgres',
     host: 'localhost',
     port: 5432,
