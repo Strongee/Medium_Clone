@@ -1,4 +1,5 @@
-import { BeforeUpdate, Column, Entity, PrimaryColumn } from "typeorm";
+import { UserEntity } from "@app/user/user.entity";
+import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 
 @Entity({ name: 'articles'})
 export class ArticleEntity {
@@ -25,14 +26,15 @@ export class ArticleEntity {
     updatedAt: Date; 
 
     @Column('simple-array')
-tagList: string[];
+    tagList: string[];
 
-@Column({default:0})
-favoritesCount: number
+    @Column({default:0})
+    favoritesCount: number
 
     @BeforeUpdate()
     updateTimestamp() {
         this.updatedAt = new Date();
     }
-
+    @ManyToOne(() => UserEntity, user => user.articles)
+    author: UserEntity
 }
