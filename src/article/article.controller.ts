@@ -20,7 +20,7 @@ private readonly articleService: ArticleService
 
     };
 
-   @Get(':slug')
+   @Get('articles/:slug')
    async getSingleArticle(@Param('slug') slug: string ): Promise<ArticleResponseInterface> {
     const article = await this.articleService.findBySlug(slug)
     return this.articleService.buildArticleResponse(article)
