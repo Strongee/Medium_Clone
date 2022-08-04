@@ -45,7 +45,7 @@ async updateCurrentUser (
     @User('id') currentUserId: number, 
     @Body('user') UpdateUserDto: UpdateUserDto): 
 Promise<UserResponseInterface> {
-const user =await this.userService.updateUser(currentUserId, UpdateUserDto
+const user = await this.userService.updateUser(currentUserId, UpdateUserDto
     );
     return this.userService.buildUserResponse(user); 
 }
