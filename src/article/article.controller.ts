@@ -6,12 +6,12 @@ import { ArticleService } from "./article.service";
 import { CreateArticleDto_ } from "./dto/createArticle.dto";
 import { ArticleResponseInterface } from "./types/articleResponse.interface";
 
-@Controller()
+@Controller('articles')
 export class ArticleController {
     constructor(
 private readonly articleService: ArticleService
     ) {}
-    @Post('articles')
+    @Post()
     @UseGuards(AuthGuard)
     async create(@User() currentUser: UserEntity, @Body('article') createArticleDto: CreateArticleDto_ ):
     Promise<ArticleResponseInterface> {
@@ -20,7 +20,7 @@ private readonly articleService: ArticleService
 
     };
 
-   @Get('articles/:slug')
+   @Get(':slug')
    async getSingleArticle(@Param('slug') slug: string ): Promise<ArticleResponseInterface> {
     const article = await this.articleService.findBySlug(slug)
     return this.articleService.buildArticleResponse(article)

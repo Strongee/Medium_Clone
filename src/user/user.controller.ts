@@ -39,13 +39,13 @@ export class UserController {
  
         return this.userService.buildUserResponse(user);
     };
-@Put('user')
-@UseGuards(AuthGuard)
-async updateCurrentUser (
+    @Put('user')
+    @UseGuards(AuthGuard)
+    async updateCurrentUser (
     @User('id') currentUserId: number, 
     @Body('user') UpdateUserDto: UpdateUserDto): 
-Promise<UserResponseInterface> {
-const user = await this.userService.updateUser(currentUserId, UpdateUserDto
+    Promise<UserResponseInterface> {
+    const user = await this.userService.updateUser(currentUserId, UpdateUserDto
     );
     return this.userService.buildUserResponse(user); 
 }
