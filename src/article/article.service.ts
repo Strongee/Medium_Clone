@@ -1,11 +1,12 @@
 import { UserEntity } from "@app/user/user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, getRepository, Repository } from "typeorm";
 import { ArticleEntity } from "./article.entity";
 import { CreateArticleDto_ } from "./dto/createArticle.dto";
 import { ArticleResponseInterface } from "./types/articleResponse.interface";
 import slugify from "slugify";
+import { ArticlesResponseInterface } from "./types/articlesResponse.interface";
 
 
 @Injectable() 
@@ -22,7 +23,7 @@ import slugify from "slugify";
      
      article.slug = this.getSlug(createArticleDto.title)
 
-     article.id = currentUser.id;
+     article.id = currentUser.id /* because article id are not assign automaticaly  */ + (Math.random() * Math.pow(36, 6) | 0);   /* because article.id = userId  */
      article.author = currentUser;
 
      return await this.articleRepository.save(article);
@@ -31,6 +32,19 @@ import slugify from "slugify";
 
       async findBySlug(slug: string): Promise<ArticleEntity> {
         return await this.articleRepository.findOne({ slug })
+      }
+
+      async findAll(currentUserId: number, query: any): Promise<ArticlesResponseInterface> {
+        const queryBuilder = getRepository(ArticleEntity)
+        .createQueryBuilder('articles')
+        .leftJoinAndSelect('articles.author', 'author')
+
+        queryBuilder.orderBy('articles.createdAt', 'DESC')
+
+        const articles = await queryBuilder.getMany();
+        const articlesCount = await queryBuilder.getCount();
+
+        return { articles, articlesCount,  }
       }
 
       async deleteArticle(slug: string, currentUserId: number): Promise<DeleteResult> {
