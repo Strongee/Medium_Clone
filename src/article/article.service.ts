@@ -19,17 +19,16 @@ import { ArticlesResponseInterface } from "./types/articlesResponse.interface";
      const article = new ArticleEntity()
      Object.assign(article, createArticleDto);
 
-     if (!article.tagList){
-        article.tagList = [];
-     }
+     if ( !article.tagList ) article.tagList = [];
+     
      
      article.slug = this.getSlug(createArticleDto.title)
 
-     article.id = currentUser.id /* because article id are not assign automaticaly  */ + (Math.random() * Math.pow(16, 6) | 0);   /* because article.id = userId  */
+  
      article.author = currentUser;
 
-     return await this.articleRepository.save(article);
-
+     return await this.articleRepository.save(article);  
+                                                          
       }
 
       async findBySlug(slug: string): Promise<ArticleEntity> {

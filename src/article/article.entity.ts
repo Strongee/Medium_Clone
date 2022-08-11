@@ -1,10 +1,10 @@
 import { UserEntity } from "@app/user/user.entity";
-import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'articles'})
 export class ArticleEntity {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
