@@ -1,7 +1,7 @@
 import { UserEntity } from "@app/user/user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, getRepository, Repository } from "typeorm";
+import { Any, DeleteResult, getRepository, Repository } from "typeorm";
 import { ArticleEntity } from "./article.entity";
 import { CreateArticleDto_ } from "./dto/createArticle.dto";
 import { ArticleResponseInterface } from "./types/articleResponse.interface";
@@ -99,8 +99,8 @@ import { ArticlesResponseInterface } from "./types/articlesResponse.interface";
           const favorited = favoriteIds.includes(article.id);
           return {...article, favorited}
         })
-       
 
+       
         return { articles: articlesWithFavorites, articlesCount,  }
       }
 

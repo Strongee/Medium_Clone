@@ -20,6 +20,12 @@ private readonly articleService: ArticleService
         return await this.articleService.findAll(currentUserId, query)
      }
 
+     @Get()
+     @UseGuards(AuthGuard)
+     async getFeed(@User('id') currentUserId: number, @Query() query: any): Promise<ArticleResponseInterface> {
+        return await this.articleService.getFeed(currentUserId, query)
+     }
+
     @Post()
     @UseGuards(AuthGuard)
     @UsePipes(new ValidationPipe())
