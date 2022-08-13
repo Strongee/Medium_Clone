@@ -1,18 +1,20 @@
 import { UserEntity } from "@app/user/user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, getRepository, Repository } from "typeorm";
+import { Any, DeleteResult, getRepository, Repository } from "typeorm";
 import { ArticleEntity } from "./article.entity";
 import { CreateArticleDto_ } from "./dto/createArticle.dto";
 import { ArticleResponseInterface } from "./types/articleResponse.interface";
 import slugify from "slugify";
 import { ArticlesResponseInterface } from "./types/articlesResponse.interface";
+import { FollowEntity } from "@app/user/profile/follow.entity";
 
 
 @Injectable() 
   export class ArticleService {
     constructor(@InjectRepository(ArticleEntity) private readonly articleRepository: Repository<ArticleEntity>,
-                @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+                @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+                @InjectRepository(FollowEntity) private readonly followRepository: Repository<FollowEntity>) {}
    
       async createArticle(currentUser: UserEntity, createArticleDto: CreateArticleDto_):
       Promise<ArticleEntity> {
@@ -99,9 +101,39 @@ import { ArticlesResponseInterface } from "./types/articlesResponse.interface";
           const favorited = favoriteIds.includes(article.id);
           return {...article, favorited}
         })
-       
 
+       
         return { articles: articlesWithFavorites, articlesCount,  }
+      }
+
+      async getFeed(currentUserId: number, query: any): Promise<ArticlesResponseInterface> {
+          const follows = await this.followRepository.find({
+            followerId: currentUserId
+          });
+          
+          if(follows.length === 0) {
+            return { articles: [], articlesCount: 0 };
+          }
+  
+          const followigUserIds = follows.map(follow => follow.followingId);
+          const queryBuilder = getRepository(ArticleEntity)
+          .createQueryBuilder('articles').leftJoinAndSelect('articles.author', 'author')
+          .where('articles.authorId IN (:...ids)', {ids: followigUserIds});
+          queryBuilder.orderBy('articles.createdAt', 'DESC');
+          const articlesCount = await queryBuilder.getCount();
+
+          if (query.limit) {
+            queryBuilder.limit(query.limit)
+          }
+
+          if (query.offset) {
+            queryBuilder.offset(query.offset)
+          }
+
+          const articles = await queryBuilder.getMany();
+
+          return {articles, articlesCount };
+
       }
 
       async deleteArticle(slug: string, currentUserId: number): Promise<DeleteResult> {
