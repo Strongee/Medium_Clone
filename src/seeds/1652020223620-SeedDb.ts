@@ -8,9 +8,9 @@ export class SeedDb1652020223620 implements MigrationInterface {
 
         await queryRunner.query(`INSERT INTO users (username, email, password) VALUES ('baka', 'baka@baka.com', '$2b$10$D3HHp9DCtn2Aoaz/9sQKfuhRRK4VDfdxOw2PS32clNREAYDfChi76')`);
 
-        //await queryRunner.query(`INSERT INTO articles (slug, title, description, body, "tagList", "authorId") VALUES ('first-article', 'First article', 'first article description', 'first article body', 'baka,dog'), 1`);
+        await queryRunner.query(`INSERT INTO articles (slug, title, description, body, "tagList", "authorId") VALUES ('first-article', 'First article', 'first article description', 'first article body', 'baka,dog', 1)`);
  
-        //await queryRunner.query(`INSERT INTO articles (slug, title, description, body, "tagList", "authorId") VALUES ('second-article', 'Second article', 'second article description', 'second article body', 'baka,dog'), 1`,);
+        await queryRunner.query(`INSERT INTO articles (slug, title, description, body, "tagList", "authorId") VALUES ('second-article', 'Second article', 'second article description', 'second article body', 'baka,dog', 1)`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {}
