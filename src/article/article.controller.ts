@@ -18,7 +18,7 @@ private readonly articleService: ArticleService
     async findAll(@User('id') currentUserId: number, @Query() query: any):
      Promise<ArticlesResponseInterface> {
         return await this.articleService.findAll(currentUserId, query)
-     }
+     } 
 
      @Get()
      @UseGuards(AuthGuard)
